@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>F1 Invitation</title>
 
 <style>
@@ -278,6 +279,72 @@ body::before{
 body{
   overflow-x:hidden;
 }
+
+@media (max-width:768px){
+
+  /* SCREEN FULL */
+  body{
+    overflow:hidden;
+  }
+
+  /* DASHBOARD FULL MOBILE */
+  .dashboardWrap{
+    flex-direction:column;
+    width:100%;
+    height:100%;
+    border-radius:0;
+    padding:20px;
+    justify-content:space-between;
+  }
+
+  .leftPanel{
+    text-align:center;
+  }
+
+  .leftPanel h1{
+    font-size:22px;
+  }
+
+  .desc{
+    font-size:13px;
+  }
+
+  /* INFO JADI GRID */
+  .rightPanel{
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .infoCard{
+    width:45%;
+    text-align:center;
+  }
+
+  /* BUTTON BESAR */
+  .btn{
+    width:100%;
+    padding:15px;
+    font-size:16px;
+  }
+
+  /* TAP OVERLAY */
+  #tapOverlay h2{
+    font-size:22px;
+  }
+
+  /* GAME CONTROL */
+  .mobileControl{
+    bottom:30px;
+    padding:0 20px;
+  }
+
+  .mobileControl button{
+    font-size:26px;
+    padding:15px 20px;
+  }
+
+}
 </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -394,6 +461,12 @@ let speed = 6;
 let score = 0;
 let gameTime = 0;
 let gameOver = false;
+
+// 🔥 RESPONSIVE MOBILE
+if(window.innerWidth < 768){
+  car.w = 50;
+  car.h = 100;
+}
 
 //Mobile Control
 let moveLeft = false;
