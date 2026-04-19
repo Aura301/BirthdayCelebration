@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F1 Invitation</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background: radial-gradient(circle at 20% 20%, rgba(255,0,0,0.15), transparent 40%),
+              radial-gradient(circle at 80% 80%, rgba(0,255,255,0.1), transparent 40%),
+              #0b0f1a;
+  color:#fff;
+  overflow:hidden;
+  font-family:'Poppins', sans-serif;
+}
+
+.screen{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;flex-direction:column;transition:0.5s}
+.hidden{opacity:0;pointer-events:none}
+
+.btn{margin-top:20px;padding:10px 20px;background:red;border:none;color:#fff;border-radius:10px;cursor:pointer}
+
+#gameCanvas{
+  background:#222;
+  width:100%;
+  height:100%;
+  position:absolute;
+  z-index:1;
+}
+
+.infoBox{
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:14px;
+}
+
+/* END SCREEN */
+#endScreen{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.85);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.endCard{
+  background:#111827;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+}
+
+.endCard button{
+  padding:10px 20px;
+  background:red;
+  border:none;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* ROAD */
+.road-line{
+  position:absolute;
+  width:4px;
+  height:100%;
+  background:repeating-linear-gradient(white 0 20px, transparent 20px 40px);
+  left:50%;
+  animation:moveRoad 0.3s linear infinite;
+}
+
+@keyframes moveRoad{
+  from{background-position-y:0}
+  to{background-position-y:40px}
+}
+
+/* GO TEXT */
+#goText{
+  position:absolute;
+  font-size:60px;
+  color:#0f0;
+  display:none;
+}
+
+/* DASHBOARD */
+.dashboard{
+  max-width:600px;
+  padding:30px;
+  background:linear-gradient(145deg,#111827,#1f2937);
+  border-radius:20px;
+  text-align:center;
+}
+
+.dashboardWrap{
+  width:90%;
+  max-width:1100px;
+  display:flex;
+  gap:30px;
+  background:linear-gradient(145deg,#0f172a,#1e293b);
+  border-radius:20px;
+  padding:30px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* LEFT */
+.leftPanel{
+  flex:2;
+}
+
+.leftPanel h1{
+  font-size:28px;
+  margin-bottom:5px;
+}
+
+.subtitle{
+  color:#9ca3af;
+  margin-bottom:20px;
+}
+
+.desc{
+  font-size:14px;
+  line-height:1.7;
+  color:#d1d5db;
+}
+
+/* RIGHT */
+.rightPanel{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.infoCard{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.infoCard h3{
+  margin-bottom:5px;
+  font-size:14px;
+  color:#9ca3af;
+}
+
+.infoCard p{
+  font-size:13px;
+}
+
+.highlight{
+  border:1px solid red;
+}
+
+.clickable{
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.clickable:hover{
+  transform:scale(1.03);
+  border:1px solid red;
+}
+
+.mobileControl{
+  position:absolute;
+  bottom:20px;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  padding:0 40px;
+  z-index:10;
+}
+
+.mobileControl button{
+  font-size:30px;
+  padding:15px 25px;
+  border:none;
+  border-radius:10px;
+  background:red;
+  color:white;
+}
+
+.leftPanel h1{
+  font-family:'Orbitron', sans-serif;
+  letter-spacing:2px;
+}
+
+body::before{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 100px,
+    rgba(255,255,255,0.03) 100px,
+    rgba(255,255,255,0.03) 102px
+  );
+  z-index:0;
+}
+
+.dashboardWrap{
+  position:relative;
+  z-index:1;
+}
+
+#tapOverlay{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:#0b0f1a;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999;
+  cursor:pointer;
+  text-align:center;
+}
+
+#tapOverlay h2{
+  font-family:'Orbitron', sans-serif;
+  font-size:28px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+  animation:blink 1.2s infinite;
+}
+
+#tapOverlay p{
+  color:#9ca3af;
+  font-size:14px;
+}
+
+/* animasi kedip */
+@keyframes blink{
+  0%,100%{opacity:1}
+  50%{opacity:0.3}
+}
+
+#tapOverlay h2{
+  text-shadow:0 0 10px red, 0 0 20px red;
+}
+</style>
+</head>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<body>
+
+<!-- SCREEN 1 -->
+ <div id="tapOverlay">
+  <h2>🏁 Tap Anywhere</h2>
+  <p>to start the experience</p>
+</div>
+<div id="screen1" class="screen">
+  <div class="dashboardWrap">
+
+    <!-- LEFT SIDE -->
+    <div class="leftPanel">
+      <h1>🏁MY BIRTHDAY CELEBRATION </h1>
+      <p class="subtitle">4U 👋</p>
+
+      <p class="desc">
+       "Halloo Ka Wawa!! apa kabar? i hope you're doing well yaa. 
+       BTW tanggal 29 April itu hari ulang tahun gue dan gue mau adain acara
+        <br><br>
+        yaa cuma makan2 sederhana aja sihh.. I just wanna to make something fun for my birthday. buat acaranya tanggal 28 April at 7 PM di Tom Sushi BXC.
+        It would mean a lot to me if you could come, soalnya kya kurang lengkap aja gitu kalau nggak ada u Kak heheh. Hope to see you there!" 🎂
+        <br><br>
+        
+maybe keliatannya kya freak banget yaa wkwk baru meet 2x tapi tbtb ngundang, tapi ya.. gue pengen bangt u ada, but No worries if you're busy/can't come. Its okeyy gue menghargai itu kok. tapi sekali lagi gue berharap u bisa dateng to my Birthday Celebration 🏁
+I'll be looking forward to seeing you!
+      </p>
+      <audio id="bgSound" src="beaty sound.mp3" loop></audio>
+      <button class="btn" onclick="startRace()">Lets Join The Race</button>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="rightPanel">
+      <div class="infoCard">
+        <h3>📅 Event Info</h3>
+        <p>April 28th, 2026</p>
+        <p>7:00 PM</p>
+      </div>
+
+     <div class="infoCard clickable" onclick="openMaps()">
+  <h3>📍 Location</h3>
+  <p>TomSushi Bintaro Xchange</p>
+</div>
+
+      <div class="infoCard highlight">
+        <h3>🏎️ Theme</h3>
+        <p>Birthday Celebration</p>
+      </div>
+
+      <div class="infoCard highlight">
+        <h3>👔Dresscode👗</h3>
+        <p>Pakai baju bebas yang nyaman aja✨</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SCREEN 2 -->
+<div id="screen2" class="screen hidden">
+  <div class="road-line"></div>
+  <canvas id="gameCanvas"></canvas>
+  <div class="mobileControl">
+  <button ontouchstart="moveLeft=true" ontouchend="moveLeft=false">⬅️</button>
+  <button ontouchstart="moveRight=true" ontouchend="moveRight=false">➡️</button>
+</div>
+  <div id="goText">GOOO!!</div>
+  <div class="infoBox" id="infoBox"></div>
+
+  <div id="endScreen" class="hidden">
+    <div class="endCard">
+      <h2 id="endTitle">FINISH</h2>
+      <p>🎉 See you at the race!</p>
+      <p>📍 TomSushi Bintaro Xchange</p>
+      <a href="https://www.google.com/maps?q=PP8H+4RF" target="_blank">Open Maps</a>
+      <br><br>
+      <button onclick="restartGame()">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="bgSound" src="f1-sound.mp3" loop></audio>
+<audio id="crash" src="https://www.soundjay.com/mechanical/car-crash-01.mp3"></audio>
+
+<script>
+const screen1 = document.getElementById('screen1');
+const screen2 = document.getElementById('screen2');
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const infoBox = document.getElementById('infoBox');
+const goText = document.getElementById('goText');
+const bgSound = document.getElementById('bgSound');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// 🔊 AUDIO AUTO PLAY PAS SCREEN 1
+window.onload = () => {
+  bgSound.play().catch(() => {});
+};
+
+// IMAGE
+let carImg = new Image();
+carImg.src = "f1 car.png";
+
+// GAME STATE
+let car = {x: canvas.width/2 - 30, y: canvas.height - 140, w:60, h:140};
+let obstacles = [];
+let speed = 6;
+let score = 0;
+let gameTime = 0;
+let gameOver = false;
+
+//Mobile Control
+let moveLeft = false;
+let moveRight = false;
+
+// START
+function startRace(){
+  screen1.classList.add('hidden');
+  screen2.classList.remove('hidden');
+  showGO();
+}
+
+// GO TEXT
+function showGO(){
+  goText.style.display='block';
+  setTimeout(()=>{
+    goText.style.display='none';
+    gameLoop();
+  },1000);
+}
+
+// CONTROL
+let keys = {};
+document.addEventListener('keydown', e => keys[e.key] = true);
+document.addEventListener('keyup', e => keys[e.key] = false);
+
+// UPDATE
+function update(){
+  if((keys['a'] || moveLeft) && car.x > 0) car.x -= 8;
+if((keys['d'] || moveRight) && car.x < canvas.width - car.w) car.x += 8;
+
+  let lanes = [canvas.width*0.3, canvas.width*0.5, canvas.width*0.7];
+
+  if(Math.random() < 0.04){
+    let lane = lanes[Math.floor(Math.random()*lanes.length)];
+    obstacles.push({x: lane, y: -50, w:50, h:50});
+  }
+
+  obstacles.forEach(o => o.y += speed);
+
+  obstacles.forEach(o => {
+    if(
+      car.x + 10 < o.x + o.w &&
+      car.x + car.w - 10 > o.x &&
+      car.y + 10 < o.y + o.h &&
+      car.y + car.h - 10 > o.y
+    ){
+      document.getElementById('crash').play();
+      finish("crash");
+    }
+  });
+
+  score++;
+  gameTime++;
+
+  if(gameTime > 600){
+    finish();
+  }
+}
+
+// DRAW
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(carImg, car.x, car.y, car.w, car.h);
+
+  ctx.fillStyle='white';
+  obstacles.forEach(o => ctx.fillRect(o.x, o.y, o.w, o.h));
+
+  infoBox.innerHTML = 'Score: ' + score;
+}
+
+// LOOP
+function gameLoop(){
+  if(!gameOver){
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
+}
+
+// FINISH
+function finish(type="finish"){
+  gameOver = true;
+
+  canvas.style.pointerEvents = "none"; // 🔥 FIX tombol
+
+  let endScreen = document.getElementById("endScreen");
+  let endTitle = document.getElementById("endTitle");
+
+  if(type === "crash"){
+    endTitle.innerHTML = "💥 CRASH!";
+  } else {
+    endTitle.innerHTML = "🏁 FINISH!";
+  }
+
+  endScreen.classList.remove("hidden");
+}
+
+// RESTART
+function restartGame(){
+  location.reload();
+}
+
+function openMaps(){
+  window.open("https://maps.app.goo.gl/oJ4rP3qHFkHCgagaA", "_blank");
+}
+
+const tapOverlay = document.getElementById("tapOverlay");
+
+tapOverlay.addEventListener("click", () => {
+  bgSound.play(); // 🔊 start audio
+
+  tapOverlay.style.opacity = "0";
+  setTimeout(()=>{
+    tapOverlay.style.display = "none";
+  },500);
+});
+</script>
+
+</body>
+</html>
