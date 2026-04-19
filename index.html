@@ -428,13 +428,19 @@ I'll be looking forward to seeing you!
 
   <div id="endScreen" class="hidden">
     <div class="endCard">
-      <h2 id="endTitle">FINISH</h2>
-      <p>🎉 See you at the race!</p>
-      <p>📍 TomSushi Bintaro Xchange</p>
-      <a href="https://www.google.com/maps?q=PP8H+4RF" target="_blank">Open Maps</a>
-      <br><br>
-      <button onclick="restartGame()">Play Again</button>
-    </div>
+  <h2 id="endTitle">FINISH</h2>
+  <p>🎉 See you at the race!</p>
+  <p>📍 TomSushi Bintaro Xchange</p>
+
+  <a href="https://www.google.com/maps?q=PP8H+4RF" target="_blank">Open Maps</a>
+
+  <br><br>
+
+  <button onclick="restartGame()">Play Again</button>
+  <button onclick="backToHome()" style="margin-top:10px;background:#374151;">
+    Back to Home
+  </button>
+</div>
   </div>
 </div>
 
@@ -622,6 +628,33 @@ document.addEventListener('touchend', function (event) {
   }
   lastTouchEnd = now;
 }, false);
+
+function backToHome(){
+
+  // reset game state
+  obstacles = [];
+  score = 0;
+  gameTime = 0;
+  gameOver = true;
+
+  // reset posisi mobil
+  car.x = canvas.width/2 - 30;
+
+  // reset control (🔥 penting biar ga nyangkut)
+  keys = {};
+  moveLeft = false;
+  moveRight = false;
+
+  // hide end screen & game
+  document.getElementById("endScreen").classList.add("hidden");
+  screen2.classList.add("hidden");
+
+  // tampilkan dashboard
+  screen1.classList.remove("hidden");
+
+  // aktifin lagi canvas
+  canvas.style.pointerEvents = "auto";
+}
 </script>
 
 </body>
