@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>F1 Invitation</title>
 
 <style>
@@ -345,6 +346,14 @@ body{
   }
 
 }
+
+button{
+  touch-action: manipulation;
+}
+
+body{
+  touch-action: manipulation;
+}
 </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -584,6 +593,20 @@ tapOverlay.addEventListener("click", () => {
     tapOverlay.style.display = "none";
   },500);
 });
+
+function restartGame(){
+  location.reload();
+}
+
+// 🔥 ANTI DOUBLE TAP ZOOM (TARO DI SINI)
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+  let now = (new Date()).getTime();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
 </script>
 
 </body>
