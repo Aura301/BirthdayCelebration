@@ -595,7 +595,22 @@ tapOverlay.addEventListener("click", () => {
 });
 
 function restartGame(){
-  location.reload();
+
+  // reset game state
+  car.x = canvas.width/2 - 30;
+  obstacles = [];
+  score = 0;
+  gameTime = 0;
+  gameOver = false;
+
+  // aktifin lagi canvas
+  canvas.style.pointerEvents = "auto";
+
+  // hide end screen
+  document.getElementById("endScreen").classList.add("hidden");
+
+  // start lagi game
+  gameLoop();
 }
 
 // 🔥 ANTI DOUBLE TAP ZOOM (TARO DI SINI)
