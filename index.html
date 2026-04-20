@@ -10,12 +10,39 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-  background: radial-gradient(circle at 20% 20%, rgba(255,0,0,0.15), transparent 40%),
-              radial-gradient(circle at 80% 80%, rgba(0,255,255,0.1), transparent 40%),
-              #0b0f1a;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255,0,0,0.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(0,255,255,0.1), transparent 40%),
+    #0b0f1a;
+    
   color:#fff;
-  overflow:hidden;
   font-family:'Poppins', sans-serif;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 100px,
+    rgba(255,255,255,0.03) 100px,
+    rgba(255,255,255,0.03) 102px
+  );
+  z-index:-1;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size:40px 40px;
+  opacity:0.3;
+  z-index:-1;
 }
 
 .screen{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;flex-direction:column;transition:0.5s}
@@ -354,6 +381,15 @@ button{
 body{
   touch-action: manipulation;
 }
+
+#countdown{
+  margin-top:10px;
+  font-size:18px;
+  font-weight:bold;
+  color:#ff4d4d;
+  letter-spacing:1px;
+  text-shadow:0 0 10px rgba(255,0,0,0.8);
+}
 </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -371,11 +407,11 @@ body{
     <!-- LEFT SIDE -->
     <div class="leftPanel">
       <h1>🏁MY BIRTHDAY CELEBRATION </h1>
-      <p class="subtitle">4U 👋</p>
+      <p class="subtitle"> 4U 👋</p>
 
       <p class="desc">
        "Halloo Ka Wawa!! apa kabar? i hope you're doing well yaa. 
-       BTW tanggal 29 April itu hari ulang tahun gue dan gue mau adain acara
+       BTW tanggal 29 April itu hari ulang tahun gue and i want to invite u to my celebration..
         <br><br>
         yaa cuma makan2 sederhana aja sihh.. I just wanna to make something fun for my birthday. buat acaranya tanggal 28 April at 7 PM di Tom Sushi BXC.
         It would mean a lot to me if you could come, soalnya kya kurang lengkap aja gitu kalau nggak ada u Kak heheh. Hope to see you there!" 🎂
@@ -394,6 +430,7 @@ I'll be looking forward to seeing you!
         <h3>📅 Event Info</h3>
         <p>April 28th, 2026</p>
         <p>7:00 PM</p>
+        <p id="countdown">Loading countdown...</p>
       </div>
 
      <div class="infoCard clickable" onclick="openMaps()">
@@ -586,7 +623,7 @@ function restartGame(){
 }
 
 function openMaps(){
-  window.open("https://maps.app.goo.gl/oJ4rP3qHFkHCgagaA", "_blank");
+  window.open("https://maps.app.goo.gl/eQTZYzUKGi38umjbA", "_blank");
 }
 
 const tapOverlay = document.getElementById("tapOverlay");
@@ -655,6 +692,34 @@ function backToHome(){
   // aktifin lagi canvas
   canvas.style.pointerEvents = "auto";
 }
+
+function startCountdown(){
+
+  const targetDate = new Date("April 28, 2026 19:00:00").getTime();
+  const countdownEl = document.getElementById("countdown");
+
+  setInterval(() => {
+
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if(distance <= 0){
+      countdownEl.innerHTML = "🎉 It's Party Time!";
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / (1000 * 60)) % 60);
+    const seconds = Math.floor((distance / 1000) % 60);
+
+    countdownEl.innerHTML = 
+      `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+  }, 1000);
+}
+
+startCountdown();
 </script>
 
 </body>
